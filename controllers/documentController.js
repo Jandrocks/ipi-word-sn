@@ -41,10 +41,10 @@ const generateWordDocument = async (req, res) => {
                                 new Paragraph({
                                     children: [
                                         new ImageRun({
-                                            data: fs.readFileSync(path.resolve(__dirname, '../public/header.png')),
+                                            data: fs.readFileSync(path.resolve(__dirname, '../public/header_entel.png')),
                                             transformation: {
-                                                width: 100,
-                                                height: 100,
+                                                width: 150,
+                                                height: 80,
                                             },
                                         }),
                                     ],
@@ -62,7 +62,7 @@ const generateWordDocument = async (req, res) => {
                                             data: fs.readFileSync(path.resolve(__dirname, '../public/footer.png')),
                                             transformation: {
                                                 width: 150,
-                                                height: 100,
+                                                height: 80,
                                             },
                                         }),
                                     ],
@@ -196,6 +196,59 @@ const generateWordDocument = async (req, res) => {
                                 }))
                             ],
                         }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: " ",
+                                    bold: true,
+                                    size: 22,
+                                    color: "0000FF",
+                                    font: "Arial"
+                                }),
+                            ],
+                        }),
+                        new Table({
+                            rows: [
+                                new TableRow({
+                                    children: [
+                                        new TableCell({ children: [new Paragraph("Incidente causado por un cambio")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("SI / NO")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("DESCRIPCIÓN DEL CAMBIO")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("-")], verticalAlign: VerticalAlign.CENTER }),
+                                    ],
+                                }),
+                                new TableRow({
+                                    children: [
+                                        new TableCell({ children: [new Paragraph("Número de tiquet (proveedor)")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("")], verticalAlign: VerticalAlign.CENTER }),
+                                    ],
+                                }),
+                            ],
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: "Diagnóstico Preliminar",
+                                    bold: true,
+                                    size: 22,
+                                    color: "0000FF",
+                                    font: "Arial"
+                                }),
+                            ],
+                        }),
+                        new Table({
+                            rows: [
+                                new TableRow({
+                                    children: [
+                                        new TableCell({
+                                            children: [new Paragraph("")],
+                                            verticalAlign: VerticalAlign.CENTER,
+                                            columnSpan: 2
+                                        })
+                                    ],
+                                })
+                            ],
+                        })
                     ],
                 },
             ],
