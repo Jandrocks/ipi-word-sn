@@ -264,7 +264,7 @@ const generateWordDocument = async (req, res) => {
             'Content-Length': buffer.length
         });
 
-        // Enviar el archivo al cliente
+        // Enviar el archivo al cliente en formato binario
         res.send(buffer);
     } catch (error) {
         console.error('Error al generar el documento:', error);
