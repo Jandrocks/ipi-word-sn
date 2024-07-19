@@ -260,7 +260,8 @@ const generateWordDocument = async (req, res) => {
         // Configurar encabezados para descargar el archivo con la extensión correcta
         res.set({
             'Content-Disposition': `attachment; filename=documento_${Date.now()}.docx`,
-            'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'Content-Length': buffer.length
         });
 
         // Enviar el archivo al cliente
