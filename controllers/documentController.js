@@ -257,15 +257,11 @@ const generateWordDocument = async (req, res) => {
         // Generar el archivo Word
         const buffer = await Packer.toBuffer(doc);
 
-        // Configurar encabezados para descargar el archivo con la extensión correcta
-        res.set({
-            'Content-Disposition': `attachment; filename=documento_${Date.now()}.docx`,
-            'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'Content-Length': buffer.length
-        });
+        // Convertir el buffer a base64
+        const base64 = buffer.toString('base64');
 
-        // Enviar el archivo al cliente en formato binario
-        res.send(buffer);
+        // Enviar la cadena base64 como respuesta JSON
+        res.json({ base64 });
     } catch (error) {
         console.error('Error al generar el documento:', error);
         res.status(500).send('Error al generar el documento.');
@@ -273,3 +269,5 @@ const generateWordDocument = async (req, res) => {
 };
 
 module.exports = { generateWordDocument };
+
+
