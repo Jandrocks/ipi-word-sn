@@ -15,7 +15,6 @@ const generateWordDocument = async (req, res) => {
         ticket_proveedor,
         resumen,
         condicion_falla,
-        codigo_resolucion,
         notas_resolucion,
         archivos_adjuntos,
         usuario_asignado,
@@ -25,7 +24,7 @@ const generateWordDocument = async (req, res) => {
         actividades
     } = req.body;
 
-    if (!numero || !empresa || !cliente || !correo_cliente || !telefono_cliente || !fecha_envio || !fecha_resuelto || !resumen || !condicion_falla || !codigo_resolucion || !notas_resolucion) {
+    if (!numero || !empresa || !cliente || !correo_cliente || !telefono_cliente || !fecha_envio || !fecha_resuelto || !resumen || !condicion_falla || !notas_resolucion) {
         return res.status(400).send('Faltan datos en el cuerpo de la petición.');
     }
 
@@ -126,14 +125,8 @@ const generateWordDocument = async (req, res) => {
                             rows: [
                                 new TableRow({
                                     children: [
-                                        new TableCell({ children: [new Paragraph("Fecha de envío")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("Fecha del Incidente")], verticalAlign: VerticalAlign.CENTER }),
                                         new TableCell({ children: [new Paragraph(fecha_envio)], verticalAlign: VerticalAlign.CENTER }),
-                                    ],
-                                }),
-                                new TableRow({
-                                    children: [
-                                        new TableCell({ children: [new Paragraph("Fecha de Resuelto")], verticalAlign: VerticalAlign.CENTER }),
-                                        new TableCell({ children: [new Paragraph(fecha_resuelto)], verticalAlign: VerticalAlign.CENTER }),
                                     ],
                                 }),
                                 new TableRow({
@@ -144,7 +137,7 @@ const generateWordDocument = async (req, res) => {
                                 }),
                                 new TableRow({
                                     children: [
-                                        new TableCell({ children: [new Paragraph("Resumen")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("Descripción")], verticalAlign: VerticalAlign.CENTER }),
                                         new TableCell({ children: [new Paragraph(resumen)], verticalAlign: VerticalAlign.CENTER }),
                                     ],
                                 }),
@@ -156,14 +149,14 @@ const generateWordDocument = async (req, res) => {
                                 }),
                                 new TableRow({
                                     children: [
-                                        new TableCell({ children: [new Paragraph("Código de Resolución")], verticalAlign: VerticalAlign.CENTER }),
-                                        new TableCell({ children: [new Paragraph(codigo_resolucion)], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("Resolución de la Falla")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph(notas_resolucion)], verticalAlign: VerticalAlign.CENTER }),
                                     ],
                                 }),
                                 new TableRow({
                                     children: [
-                                        new TableCell({ children: [new Paragraph("Notas de Resolución")], verticalAlign: VerticalAlign.CENTER }),
-                                        new TableCell({ children: [new Paragraph(notas_resolucion)], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("TIPO DOCUMENTO")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("CONFIDENCIAL")], verticalAlign: VerticalAlign.CENTER }),
                                     ],
                                 }),
                             ],
@@ -220,7 +213,7 @@ const generateWordDocument = async (req, res) => {
                                 new TableRow({
                                     children: [
                                         new TableCell({ children: [new Paragraph("Número de tiquet (proveedor)")], verticalAlign: VerticalAlign.CENTER }),
-                                        new TableCell({ children: [new Paragraph("")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph(ticket_proveedor)], verticalAlign: VerticalAlign.CENTER }),
                                     ],
                                 }),
                             ],
@@ -269,5 +262,3 @@ const generateWordDocument = async (req, res) => {
 };
 
 module.exports = { generateWordDocument };
-
-
