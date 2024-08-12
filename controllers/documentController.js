@@ -1,4 +1,4 @@
-const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, Header, Footer, VerticalAlign, AlignmentType, ImageRun } = require('docx');
+const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, Header, Footer, VerticalAlign, AlignmentType, ImageRun, WidthType } = require('docx');
 const fs = require('fs');
 const path = require('path');
 const { calculateDuration } = require('../utils/helpers');
@@ -23,6 +23,8 @@ const generateWordDocument = async (req, res) => {
         cambios_estado,
         actividades
     } = req.body;
+
+    const outputFormat = 'base64'; // Cambia a 'base64' para devolver como base64 o a file(para word directo)
 
     if (!numero || !empresa || !cliente || !correo_cliente || !telefono_cliente || !fecha_envio || !fecha_resuelto || !resumen || !condicion_falla || !notas_resolucion) {
         return res.status(400).send('Faltan datos en el cuerpo de la petición.');
@@ -83,6 +85,10 @@ const generateWordDocument = async (req, res) => {
                             ],
                         }),
                         new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE,
+                            },
                             rows: [
                                 new TableRow({
                                     children: [
@@ -122,6 +128,10 @@ const generateWordDocument = async (req, res) => {
                             ],
                         }),
                         new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE,
+                            },
                             rows: [
                                 new TableRow({
                                     children: [
@@ -173,6 +183,10 @@ const generateWordDocument = async (req, res) => {
                             ],
                         }),
                         new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE,
+                            },
                             rows: [
                                 new TableRow({
                                     children: [
@@ -201,6 +215,10 @@ const generateWordDocument = async (req, res) => {
                             ],
                         }),
                         new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE,
+                            },
                             rows: [
                                 new TableRow({
                                     children: [
@@ -230,6 +248,10 @@ const generateWordDocument = async (req, res) => {
                             ],
                         }),
                         new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE,
+                            },
                             rows: [
                                 new TableRow({
                                     children: [
@@ -237,7 +259,7 @@ const generateWordDocument = async (req, res) => {
                                             children: [new Paragraph("")],
                                             verticalAlign: VerticalAlign.CENTER,
                                             columnSpan: 2
-                                        })
+                                        }),
                                     ],
                                 })
                             ],
@@ -250,13 +272,19 @@ const generateWordDocument = async (req, res) => {
         // Generar el archivo Word
         const buffer = await Packer.toBuffer(doc);
 
-        // Convertir el buffer a base64
-        const base64 = buffer.toString('base64');
+        if (outputFormat === 'file') {
+            // Enviar el archivo Word como respuesta para ser descargado
+            res.setHeader('Content-Disposition', 'attachment; filename=documento.docx');
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+            res.send(buffer);
+        } else {
+            // Convertir el buffer a base64 y enviarlo
+            const base64 = buffer.toString('base64');
+            res.json({ base64 });
+        }
 
-        // Enviar la cadena base64 como respuesta JSON
-        res.json({ base64 });
     } catch (error) {
-        console.error('Error al generar el documento:', error);
+        console.error('Error al generar el documento:', error); // Registro del error detallado
         res.status(500).send('Error al generar el documento.');
     }
 };
