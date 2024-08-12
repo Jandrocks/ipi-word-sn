@@ -1,4 +1,4 @@
-const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, Header, Footer, VerticalAlign, AlignmentType, ImageRun, WidthType } = require('docx');
+const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, Header, Footer, VerticalAlign, AlignmentType, ImageRun, WidthType, BorderStyle, TabStopType, TabStopPosition } = require('docx');
 const fs = require('fs');
 const path = require('path');
 const { calculateDuration } = require('../utils/helpers');
@@ -21,10 +21,11 @@ const generateWordDocument = async (req, res) => {
         observaciones_adicionales,
         notas_trabajo,
         cambios_estado,
-        actividades
+        actividades,
+        caused_by // Añadir el campo caused_by aquí
     } = req.body;
 
-    const outputFormat = 'base64'; // Cambia a 'base64' para devolver como base64 o a file(para word directo)
+    const outputFormat = 'file'; // Cambia a 'base64' para devolver como base64 o a 'file' para descargar el archivo directamente
 
     if (!numero || !empresa || !cliente || !correo_cliente || !telefono_cliente || !fecha_envio || !fecha_resuelto || !resumen || !condicion_falla || !notas_resolucion) {
         return res.status(400).send('Faltan datos en el cuerpo de la petición.');
@@ -41,15 +42,40 @@ const generateWordDocument = async (req, res) => {
                             children: [
                                 new Paragraph({
                                     children: [
-                                        new ImageRun({
-                                            data: fs.readFileSync(path.resolve(__dirname, '../public/header_entel.png')),
-                                            transformation: {
-                                                width: 150,
-                                                height: 80,
-                                            },
+                                        new TextRun({
+                                            text: "Informe Post Incidente",
+                                            bold: true,
+                                            size: 28, // Ajusta el tamaño si es necesario
+                                            color: "6D9EEB",
+                                            font: "Arial"
+                                        }),
+                                        new TextRun({
+                                            text: "\t", // Añade un tabulador para separar el título del número
+                                        }),
+                                        new TextRun({
+                                            text: numero, // Aquí se utiliza el número de incidente
+                                            bold: true,
+                                            size: 22,
+                                            color: "6D9EEB",
+                                            font: "Arial",
                                         }),
                                     ],
-                                    alignment: AlignmentType.RIGHT,
+                                    tabStops: [
+                                        {
+                                            type: TabStopType.RIGHT,
+                                            position: TabStopPosition.MAX,
+                                        },
+                                    ],
+                                }),
+                                new Paragraph({
+                                    border: {
+                                        bottom: {
+                                            color: "6D9EEB",
+                                            space: 1,
+                                            value: BorderStyle.SINGLE,
+                                            size: 6,
+                                        },
+                                    },
                                 }),
                             ],
                         }),
@@ -116,6 +142,8 @@ const generateWordDocument = async (req, res) => {
                                 }),
                             ],
                         }),
+                        new Paragraph({ text: "" }), // Salto de línea
+
                         new Paragraph({
                             children: [
                                 new TextRun({
@@ -171,6 +199,8 @@ const generateWordDocument = async (req, res) => {
                                 }),
                             ],
                         }),
+                        new Paragraph({ text: "" }), // Salto de línea
+
                         new Paragraph({
                             children: [
                                 new TextRun({
@@ -203,17 +233,8 @@ const generateWordDocument = async (req, res) => {
                                 }))
                             ],
                         }),
-                        new Paragraph({
-                            children: [
-                                new TextRun({
-                                    text: " ",
-                                    bold: true,
-                                    size: 22,
-                                    color: "0000FF",
-                                    font: "Arial"
-                                }),
-                            ],
-                        }),
+                        new Paragraph({ text: "" }), // Salto de línea
+
                         new Table({
                             width: {
                                 size: 100,
@@ -225,7 +246,7 @@ const generateWordDocument = async (req, res) => {
                                         new TableCell({ children: [new Paragraph("Incidente causado por un cambio")], verticalAlign: VerticalAlign.CENTER }),
                                         new TableCell({ children: [new Paragraph("SI / NO")], verticalAlign: VerticalAlign.CENTER }),
                                         new TableCell({ children: [new Paragraph("DESCRIPCIÓN DEL CAMBIO")], verticalAlign: VerticalAlign.CENTER }),
-                                        new TableCell({ children: [new Paragraph("-")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph(caused_by)], verticalAlign: VerticalAlign.CENTER }), // Usar el campo caused_by aquí
                                     ],
                                 }),
                                 new TableRow({
@@ -236,6 +257,8 @@ const generateWordDocument = async (req, res) => {
                                 }),
                             ],
                         }),
+                        new Paragraph({ text: "" }), // Salto de línea
+
                         new Paragraph({
                             children: [
                                 new TextRun({
@@ -263,7 +286,8 @@ const generateWordDocument = async (req, res) => {
                                     ],
                                 })
                             ],
-                        })
+                        }),
+                        new Paragraph({ text: "" }) // Salto de línea final
                     ],
                 },
             ],
