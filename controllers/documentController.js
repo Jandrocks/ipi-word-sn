@@ -25,7 +25,7 @@ const generateWordDocument = async (req, res) => {
         caused_by // Añadir el campo caused_by aquí
     } = req.body;
 
-    const outputFormat = 'file'; // Cambia a 'base64' para devolver como base64 o a 'file' para descargar el archivo directamente
+    const outputFormat = 'base64'; // test Cambia a 'base64' para devolver como base64 o a 'file' para descargar el archivo directamente
 
     if (!numero || !empresa || !cliente || !correo_cliente || !telefono_cliente || !fecha_envio || !fecha_resuelto || !resumen || !condicion_falla || !notas_resolucion) {
         return res.status(400).send('Faltan datos en el cuerpo de la petición.');
