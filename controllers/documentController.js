@@ -305,7 +305,9 @@ const generateWordDocument = async (req, res) => {
             // Convertir el buffer a base64 y enviarlo
             const base64 = buffer.toString('base64');
             res.json({ base64 });
-        }
+            // Si todo salió bien, registro en consola
+          console.log(`Documento generado correctamente para el incidente número: ${numero}`);
+                }
 
     } catch (error) {
         console.error('Error al generar el documento:', error); // Registro del error detallado

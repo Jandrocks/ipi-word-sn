@@ -4,7 +4,8 @@
   "description": "API to generate Word documents",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"    
   },
   "dependencies": {
     "docx": "^7.8.2",
