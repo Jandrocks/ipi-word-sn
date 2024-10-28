@@ -85,19 +85,29 @@ const generateWordDocument = async (req, res) => {
                             children: [
                                 new Paragraph({
                                     children: [
+                                        new TextRun({
+                                            text: "Todos los derechos están reservados. Ninguna parte de este documento puede ser ni reproducido ni transmitido de ninguna manera, de forma completa o parcial sin el permiso explícito de los propietarios del copyright. © Entel 2018",
+                                            font: "Arial",
+                                            size: 18,
+                                        }),
+                                    ],
+                                    alignment: AlignmentType.JUSTIFIED, // Texto justificado
+                                }),
+                                new Paragraph({
+                                    children: [
                                         new ImageRun({
-                                            data: fs.readFileSync(path.resolve(__dirname, '../public/footer.png')),
+                                            data: fs.readFileSync(path.resolve(__dirname, '../public/logo_entel_digital.png')),
                                             transformation: {
-                                                width: 150,
-                                                height: 80,
+                                                width: 80,
+                                                height: 40,
                                             },
                                         }),
                                     ],
-                                    alignment: AlignmentType.CENTER,
+                                    alignment: AlignmentType.CENTER, // Imagen centrada
                                 }),
                             ],
                         }),
-                    },
+                    },                    
                     children: [
                         new Paragraph({
                             children: [
@@ -251,7 +261,7 @@ const generateWordDocument = async (req, res) => {
                                 }),
                                 new TableRow({
                                     children: [
-                                        new TableCell({ children: [new Paragraph("Número de tiquet (proveedor)")], verticalAlign: VerticalAlign.CENTER }),
+                                        new TableCell({ children: [new Paragraph("Número de ticket (proveedor)")], verticalAlign: VerticalAlign.CENTER }),
                                         new TableCell({ children: [new Paragraph(ticket_proveedor)], verticalAlign: VerticalAlign.CENTER }),
                                     ],
                                 }),
